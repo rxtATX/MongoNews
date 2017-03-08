@@ -1,0 +1,30 @@
+.label-default {
+    background-color: #72706b;
+    padding: 1.4em 1.2em;
+    border-radius: inherit;
+}
+.banner-label {
+    background-color: rgba(114, 112, 107, .85);
+}
+.btn-default:focus {
+    color: #eee;
+    background-color: #72706b;
+}
+#banner {
+	background:
+	    /* top, transparent black, faked with gradient */
+        linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.4)
+        ),
+        /* bottom, image */
+        url(../images/newsprint.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: #eee;
+}
+.navbar {
+    margin-bottom: 0px;
+}

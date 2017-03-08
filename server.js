@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 
 var path = require("path");
-app.use(express.static(process.cwd + "/public"));
+app.use(express.static(path.join(__dirname, "/public/")));
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
