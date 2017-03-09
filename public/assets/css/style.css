@@ -10,7 +10,17 @@
     color: #eee;
     background-color: #72706b;
 }
+a {
+    color: black;
+}
+a:hover, a:visited{
+    font-weight: bold;
+    color: dimgray;
+    text-decoration: none;
+}
 #banner {
+    border-top: medium black solid;
+    border-bottom: medium black solid;
 	background:
 	    /* top, transparent black, faked with gradient */
         linear-gradient(
@@ -24,7 +34,11 @@
     -o-background-size: cover;
     background-size: cover;
     color: #eee;
+    padding-top: 90px;
+    padding-bottom: 110px;
 }
 .navbar {
+    border-top: medium black solid;
+    border-bottom: thin black solid;
     margin-bottom: 0px;
 }
