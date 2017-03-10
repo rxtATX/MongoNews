@@ -16,7 +16,7 @@ var metadata = {};
 var firstArr = [];
 var secondArr = [];
 
-router.post("/getArticles", function (req, res) {
+router.get("/getArticles", function (req, res) {
 	
 	request('https://www.bbc.com/news/world', function (error, response, html) {
 		if (!error && response.statusCode == 200) {
@@ -45,7 +45,7 @@ router.post("/getArticles", function (req, res) {
 			});
 		}
 	});
-	res.send(firstArr);
+	res.json(firstArr);
 	firstArr = [];
 });
 // function next() {
