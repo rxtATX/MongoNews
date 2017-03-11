@@ -1,16 +1,30 @@
 var express = require("express");
 var router = express.Router();
 
+var request = require("request");
+var cheerio = require("cheerio");
+var mongojs = require("mongojs");
+
+// Database configuration
+var databaseUrl = "MongoNewsDB";
+var collections = ["savedStories"];
+
+// Hook mongojs configuration to the db variable
+var db = mongojs(databaseUrl, collections);
+db.on("error", function(error) {
+  console.log("Database Error:", error);
+});
+
 router.get("/", function (req, res) {
 	res.render("index", { title: 'News Scraper' });
 });
 
 router.get("/saved", function (req, res) {
-	res.render("saved", { title: 'News Scraper' });
-});
+	db.savedStories.find({}, function(found) {
 
-var request = require("request");
-var cheerio = require("cheerio");
+	res.render("saved", {found});
+	});
+});
 
 var metadata = {};
 var firstArr = [];
@@ -48,39 +62,25 @@ router.get("/getArticles", function (req, res) {
 	res.json(firstArr);
 	firstArr = [];
 });
-// function next() {
-// 	for (let i = 0; i < firstArr.length; i++) {
-// 		var URL = firstArr[i].link;
-// 		pullStory(i, URL);
-// 	}
-// }
 
-// function pullStory(i, URL) {
-// 	var metastory = {
-// 		id: i,
-// 		image: null,
-// 		story: null
-// 	};
-// 	request(URL, function (error, response, html) {
-// 		if (!error && response.statusCode == 200) {
-// 			var $ = cheerio.load(html);
-// 			$('img').each(function (element) {
-// 				if ($(this).hasClass('js-image-replace')) {
-// 					var image = $(this).attr('src');
-// 					metastory.image = image;
-// 				}
-// 				// secondArr.push({ image: metastory.image });
-// 			});
-// 			$('p').each(function (element) {
-// 				if ($(this).hasClass('story-body__introduction')) {
-// 					var story = $(this).text();
-// 					metastory.story = story;
-// 				secondArr.push(metastory);
-// 				}
-// 			});
-// 		}
-// 	});
-// }
+router.get("/savedArticles", function(req, res) {
+	var title = req.query.title;
+	var link = req.query.link;
+
+	if (title && link) {
+		db.savedStories.save({
+			title: title,
+			link: link
+		}, function (error, saved) {
+			if (error) {
+				console.log(error);
+			} else {
+				console.log(saved);
+			}
+		});
+	};
+	res.json({title: title, link: link});
+});
 
 
 module.exports = router;
