@@ -6,32 +6,26 @@ var cheerio = require("cheerio");
 var mongojs = require("mongojs");
 
 // Database configuration
-var databaseUrl = "MongoNewsDB";
+var databaseUrl = "mongodb://heroku_qk1td2p1:ov6l4deofcb3o2kkcsmunaljq2@ds123370.mlab.com:23370/heroku_qk1td2p1"
+// var databaseUrl = "MongoNewsDB";
 var collections = ["savedStories"];
 
-// Hook mongojs configuration to the db variable
+// // Hook mongojs configuration to the db variable
 var db = mongojs(databaseUrl, collections);
-db.on("error", function(error) {
-  console.log("Database Error:", error);
-});
 
 router.get("/", function (req, res) {
-	res.render("index", { title: 'News Scraper' });
+	res.render("index", { pagename: 'News Scraper' });
 });
 
 router.get("/saved", function (req, res) {
-	db.savedStories.find({}, function(found) {
-
-	res.render("saved", {found});
-	});
+	res.render("saved", { title: 'News Scraper' });
 });
 
 var metadata = {};
 var firstArr = [];
-var secondArr = [];
 
 router.get("/getArticles", function (req, res) {
-	
+
 	request('https://www.bbc.com/news/world', function (error, response, html) {
 		if (!error && response.statusCode == 200) {
 			var $ = cheerio.load(html);
@@ -39,7 +33,7 @@ router.get("/getArticles", function (req, res) {
 			$('span.title-link__title-text').each(function (i, element) {
 
 				var title = $(this).text();
-				var a = $(this).parent().parent();
+				var a = $(this).find("a");
 				var aRoot = 'https://www.bbc.com';
 				var aPath = a.attr('href');
 				a = aRoot + aPath;
@@ -54,7 +48,7 @@ router.get("/getArticles", function (req, res) {
 				metadata.title = title;
 				metadata.link = a;
 				firstArr.push(metadata);
-				
+
 				return i < 19;
 			});
 		}
@@ -63,7 +57,7 @@ router.get("/getArticles", function (req, res) {
 	firstArr = [];
 });
 
-router.get("/savedArticles", function(req, res) {
+router.get("/savedArticles", function (req, res) {
 	var title = req.query.title;
 	var link = req.query.link;
 
@@ -75,11 +69,12 @@ router.get("/savedArticles", function(req, res) {
 			if (error) {
 				console.log(error);
 			} else {
-				console.log(saved);
+				console.log("saved");
 			}
 		});
-	};
-	res.json({title: title, link: link});
+	}
+	res.json({ title: title, link: link });
+	console.log(title);
 });
 
 
